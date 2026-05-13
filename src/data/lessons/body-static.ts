@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const bodyStaticLesson = {
     id: 'body-static',
-    number: '04',
+    number: '05',
     title: '内置中间件',
     level: '基础',
     summary: '使用 express.json、express.urlencoded 和 express.static 处理常见输入与静态资源。',
@@ -20,7 +20,12 @@ export const bodyStaticLesson = {
       {
         title: '静态文件',
         detail:
-          'express.static() 把目录映射成静态资源服务，常用于公开图片、CSS、下载文件或前端构建产物。',
+          'express.static() 把目录映射成静态资源服务，常用于公开图片、CSS、下载文件或前端构建产物。挂载路径是 URL 前缀，目录路径是服务器文件系统路径，两者不要混淆。',
+      },
+      {
+        title: '解析器只影响后续路由',
+        detail:
+          '中间件顺序决定 req.body 是否可用。body parser 必须注册在读取 req.body 的路由之前；如果只给某组接口使用，优先挂在 router 或具体路由上，减少副作用。',
       },
     ],
     examples: [
@@ -36,6 +41,7 @@ app.use('/assets', express.static('public', {
 }));
 
 app.post('/feedback', (req, res) => {
+  // req.body 来自客户端，解析成功不代表字段可信。
   const { message } = req.body;
   res.status(201).json({ received: Boolean(message) });
 });`,
@@ -53,6 +59,10 @@ app.post('/feedback', (req, res) => {
       {
         question: 'express.static 适合放敏感文件吗？',
         answer: '不适合。挂载目录中的文件会被公开访问，不能放密钥、环境变量或内部文档。',
+      },
+      {
+        question: '为什么 body parser 不一定要全局挂载？',
+        answer: '不同接口可能需要不同大小限制或不同格式。局部挂载能减少误解析和安全风险。',
       },
     ],
   } satisfies Lesson;

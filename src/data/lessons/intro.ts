@@ -20,7 +20,12 @@ export const introLesson = {
       {
         title: 'Express 5 的变化',
         detail:
-          'Express 5 已成为当前主线，重要变化之一是异步 route handler 抛错或 rejected promise 会自动进入错误处理中间件。',
+          'Express 5 已成为当前主线，重要变化之一是异步 route handler 抛错或 rejected promise 会自动进入错误处理中间件。学习时要从一开始就按 Express 5 的错误模型写代码，避免把旧版本里大量手动 next(error) 的习惯带进新项目。',
+      },
+      {
+        title: 'Express 不替你分层',
+        detail:
+          'Express 只处理 HTTP 层的组织方式。真实项目仍然需要你自己决定 routes、services、repositories、config、middlewares 等目录边界；框架越轻，团队越需要明确约定。',
       },
     ],
     examples: [
@@ -34,6 +39,7 @@ const port = 3000;
 
 // app.get 注册 GET / 路由，req 是请求对象，res 是响应对象。
 app.get('/', (req, res) => {
+  // send 可以发送字符串、Buffer 或对象；API 项目里更常用 res.json。
   res.send('Hello Express');
 });
 

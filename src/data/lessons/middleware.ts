@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const middlewareLesson = {
     id: 'middleware',
-    number: '03',
+    number: '04',
     title: '中间件模型',
     level: '核心',
     summary: '掌握 Express 最重要的抽象：请求如何沿着中间件链逐步处理。',
@@ -20,7 +20,12 @@ export const middlewareLesson = {
       {
         title: '结束请求',
         detail:
-          '一个中间件如果调用 res.send/res.json/res.end，就应该停止继续处理；否则可能出现重复响应。',
+          '一个中间件如果调用 res.send/res.json/res.end，就应该停止继续处理；否则后续 handler 可能再次写响应，触发 headers already sent。常见写法是 return res.status(...).json(...)，用 return 明确结束当前函数。',
+      },
+      {
+        title: '中间件是横切能力',
+        detail:
+          '日志、认证、限流、解析请求体、注入请求 ID 都适合中间件。业务规则不要全部塞进全局中间件，否则请求路径不清晰，也很难测试。',
       },
     ],
     examples: [
@@ -41,6 +46,7 @@ export const middlewareLesson = {
 app.use(requestLogger);
 
 app.get('/health', (req, res) => {
+  // 这个路由会在 requestLogger 之后执行，响应完成后触发 finish 日志。
   res.json({ ok: true });
 });`,
       },
@@ -57,6 +63,10 @@ app.get('/health', (req, res) => {
       {
         question: '中间件已经响应后还调用 next 有什么风险？',
         answer: '后续处理器可能再次写响应，导致 Cannot set headers after they are sent 之类的问题。',
+      },
+      {
+        question: '为什么认证中间件通常挂在受保护路由前面？',
+        answer: '它可以在业务 handler 前统一拒绝未认证请求，业务代码就不需要重复处理登录状态。',
       },
     ],
   } satisfies Lesson;

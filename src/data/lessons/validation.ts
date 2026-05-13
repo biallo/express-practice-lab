@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const validationLesson = {
     id: 'validation',
-    number: '08',
+    number: '12',
     title: '输入校验',
     level: '实践',
     summary: '在请求进入业务逻辑之前校验 body、params 和 query，降低脏数据和安全风险。',
@@ -20,7 +20,12 @@ export const validationLesson = {
       {
         title: '错误可读性',
         detail:
-          '校验错误应告诉客户端哪个字段不合法，以及如何修复。不要只返回 Validation failed。',
+          '校验错误应告诉客户端哪个字段不合法，以及如何修复。不要只返回 Validation failed，否则客户端无法把错误精确展示到表单字段上。',
+      },
+      {
+        title: '校验和清洗分开理解',
+        detail:
+          '校验回答“这个输入能不能接受”，清洗回答“接受后以什么标准形状进入业务层”。trim、类型转换、默认值填充都属于清洗。',
       },
     ],
     examples: [
@@ -37,6 +42,7 @@ export const validationLesson = {
     });
   }
 
+  // 从这里开始，业务层可以假设 title 是清洗过的字符串。
   req.body.title = title.trim();
   next();
 }
@@ -58,6 +64,10 @@ app.post('/courses', validateCourse, (req, res) => {
       {
         question: '清洗数据有什么价值？',
         answer: '清洗后的数据形状更稳定，业务层可以少处理空格、类型转换和非法值。',
+      },
+      {
+        question: '为什么错误信息要指出具体字段？',
+        answer: '具体字段能帮助客户端把错误展示到正确控件，也能减少调用方反复试错。',
       },
     ],
   } satisfies Lesson;

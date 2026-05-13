@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const databaseLesson = {
     id: 'database',
-    number: '12',
+    number: '16',
     title: '数据库集成',
     level: '实践',
     summary: '把数据库访问从路由中拆出去，处理连接、异步错误和事务边界。',
@@ -10,7 +10,7 @@ export const databaseLesson = {
       {
         title: '连接复用',
         detail:
-          '数据库客户端通常应在应用启动时创建并复用，避免每个请求都新建连接。',
+          '数据库客户端通常应在应用启动时创建并复用，避免每个请求都新建连接。请求级创建连接会增加延迟，也容易在并发升高时耗尽数据库连接数。',
       },
       {
         title: '服务层隔离',
@@ -21,6 +21,11 @@ export const databaseLesson = {
         title: '事务边界',
         detail:
           '多个写操作必须一起成功或失败时，需要事务。不要把跨多表写入散落在多个互不知情的函数中。',
+      },
+      {
+        title: '错误和连接释放',
+        detail:
+          '数据库错误应转成业务能理解的错误类型，例如唯一约束冲突返回 409。手动管理连接时必须在 finally 中释放，连接池客户端也要避免泄漏事务。',
       },
     ],
     examples: [
@@ -60,6 +65,14 @@ const ordersService = {
       {
         question: '服务层隔离的主要收益是什么？',
         answer: '业务逻辑更容易测试、复用和维护，路由层不会被数据库细节污染。',
+      },
+      {
+        question: '数据库唯一约束冲突通常应该返回什么类型的错误？',
+        answer: '通常应转换成 409 Conflict 或明确的业务错误，而不是把数据库原始错误直接暴露给客户端。',
+      },
+      {
+        question: '事务为什么应该尽量包在服务层？',
+        answer: '服务层最清楚一组业务操作的完整边界，能保证相关写入一起成功或一起失败。',
       },
     ],
   } satisfies Lesson;

@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const cookiesSessionsLesson = {
     id: 'cookies-sessions',
-    number: '09',
+    number: '13',
     title: 'Cookie、Session 与认证入口',
     level: '实践',
     summary: '理解 Express 中常见登录状态保存方式，以及 Cookie 安全属性的意义。',
@@ -20,7 +20,12 @@ export const cookiesSessionsLesson = {
       {
         title: '安全属性',
         detail:
-          'httpOnly 降低 XSS 读取风险，secure 要求 HTTPS，sameSite 降低跨站请求风险，maxAge 控制过期时间。',
+          'httpOnly 降低 XSS 读取风险，secure 要求 HTTPS，sameSite 降低跨站请求风险，maxAge 控制过期时间。这些属性不是互相替代，而是共同组成 Cookie 的基本安全边界。',
+      },
+      {
+        title: '认证和会话生命周期',
+        detail:
+          '登录、刷新、退出、密码修改和权限变化都会影响会话。服务端 Session 的优势是可以主动吊销，而纯客户端令牌通常需要额外黑名单或短过期策略。',
       },
     ],
     examples: [
@@ -31,6 +36,7 @@ export const cookiesSessionsLesson = {
   const sessionId = await createSession(req.body.email);
 
   res.cookie('sid', sessionId, {
+    // httpOnly 防止前端脚本直接读取 sid；secure 在 HTTPS 下才发送。
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
@@ -53,6 +59,14 @@ export const cookiesSessionsLesson = {
       {
         question: 'Session 相比纯 Cookie 状态有什么优势？',
         answer: '服务端可主动吊销、更新和审计登录状态，适合权限变化较多的系统。',
+      },
+      {
+        question: 'sameSite 主要缓解什么问题？',
+        answer: 'sameSite 可以减少浏览器在跨站请求中自动携带 Cookie 的情况，从而降低 CSRF 风险。',
+      },
+      {
+        question: '退出登录时服务端应该做什么？',
+        answer: '不仅要清除浏览器 Cookie，还应该让服务端 Session 失效，避免旧 session id 继续可用。',
       },
     ],
   } satisfies Lesson;

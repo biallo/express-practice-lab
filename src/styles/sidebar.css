@@ -188,7 +188,7 @@
 }
 
 .course-check.done {
-  background: var(--success);
+  background: var(--accent);
 }
 
 .course-check svg {

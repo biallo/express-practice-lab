@@ -2,7 +2,7 @@ import type { Lesson } from './types';
 
 export const corsProxyLesson = {
     id: 'cors-proxy',
-    number: '10',
+    number: '14',
     title: 'CORS 与代理部署',
     level: '部署',
     summary: '处理浏览器跨域请求，并正确理解反向代理后的协议、IP 和安全设置。',
@@ -15,12 +15,17 @@ export const corsProxyLesson = {
       {
         title: '精确允许来源',
         detail:
-          '生产环境不要无条件允许所有 origin，尤其是带 credentials 的接口。应按环境配置允许列表。',
+          '生产环境不要无条件允许所有 origin，尤其是带 credentials 的接口。应按环境配置允许列表，并明确允许的方法、请求头和是否允许携带 Cookie。',
       },
       {
         title: 'trust proxy',
         detail:
           '部署在 Nginx、负载均衡或平台代理后时，设置 trust proxy 可以让 req.ip、req.protocol 等读取代理头。',
+      },
+      {
+        title: '预检请求',
+        detail:
+          '复杂跨域请求会先发送 OPTIONS 预检。服务端需要正确返回 Access-Control-Allow-Methods 和 Access-Control-Allow-Headers，否则真实请求不会被浏览器发出。',
       },
     ],
     examples: [
@@ -36,6 +41,7 @@ app.use((req, res, next) => {
 
   if (origin && allowedOrigins.has(origin)) {
     res.set('Access-Control-Allow-Origin', origin);
+    // 动态 Origin 必须配合 Vary，避免缓存层复用错误来源。
     res.set('Vary', 'Origin');
   }
 
@@ -55,6 +61,14 @@ app.use((req, res, next) => {
       {
         question: 'trust proxy 配错可能带来什么问题？',
         answer: '可能导致 IP、协议、安全 Cookie 判断、限流和日志不准确，甚至被伪造代理头影响。',
+      },
+      {
+        question: '为什么带 credentials 的 CORS 不能随便用 *？',
+        answer: '携带 Cookie 或认证信息时必须精确声明允许来源，否则会扩大跨站读取风险，浏览器也不接受通配来源配合 credentials。',
+      },
+      {
+        question: 'OPTIONS 预检失败会发生什么？',
+        answer: '浏览器会阻止后续真实请求，前端代码通常只能看到跨域错误，而不是业务接口响应。',
       },
     ],
   } satisfies Lesson;

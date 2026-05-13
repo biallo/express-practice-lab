@@ -20,7 +20,12 @@ export const routingLesson = {
       {
         title: '查询字符串',
         detail:
-          'req.query 用来读取 ?page=1&keyword=node 这类筛选、分页、排序条件。它不应该承载必须存在的资源身份。',
+          'req.query 用来读取 ?page=1&keyword=node 这类筛选、分页、排序条件。它不应该承载必须存在的资源身份，因为 query 通常是可选输入，缺失时也应该有默认行为。',
+      },
+      {
+        title: '路由顺序',
+        detail:
+          'Express 按注册顺序匹配路由。固定路径、具体路径应该放在参数路径之前，例如 /courses/new 要先于 /courses/:courseId，否则 new 会被当成 courseId。',
       },
     ],
     examples: [
@@ -56,6 +61,10 @@ app.post('/courses', (req, res) => {
       {
         question: '路由顺序为什么重要？',
         answer: 'Express 按注册顺序匹配路由，过于宽泛的路由放前面可能抢先处理请求。',
+      },
+      {
+        question: '为什么 /users/me 通常要放在 /users/:id 前面？',
+        answer: '因为 /users/:id 会匹配任意单段路径。如果它先注册，me 会被当成 id，固定语义路由就不会进入。',
       },
     ],
   } satisfies Lesson;
