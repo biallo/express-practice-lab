@@ -1,0 +1,22 @@
+{
+  "name": "Express Practice Lab",
+  "short_name": "Express Lab",
+  "description": "通过课程讲解、代码示例和复盘问答系统学习 Express 5。",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f6f7f2",
+  "theme_color": "#111827",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

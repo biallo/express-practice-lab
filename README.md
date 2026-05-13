@@ -4,7 +4,7 @@
 
 ## 在线预览
 
-[https://biallo.github.io/tailwindcss-practice-lab/](https://biallo.github.io/tailwindcss-practice-lab/)
+[https://biallo.github.io/express-practice-lab/](https://biallo.github.io/express-practice-lab/)
 
 ## 运行
 
