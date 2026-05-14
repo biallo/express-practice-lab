@@ -13,6 +13,11 @@ export const testingLesson = {
           '测试时应导出 app，而不是在测试中启动真实监听端口。入口文件负责 app.listen，测试文件直接把 app 交给 supertest，这样测试不依赖端口，也更容易并行运行。',
       },
       {
+        title: 'supertest 是什么',
+        detail:
+          'supertest 是 Node.js 里常用的 HTTP 接口测试库，特别适合测试 Express API。它可以直接接收 Express app，模拟 GET、POST 等请求，并断言状态码、响应头和响应体。',
+      },
+      {
         title: '覆盖关键分支',
         detail:
           'API 测试应覆盖成功响应、输入校验失败、未认证、未授权、404 和错误处理中间件，避免只测 happy path。',
@@ -33,6 +38,8 @@ export const testingLesson = {
         title: '用 supertest 测路由',
         language: 'js',
         code: `// app.js
+import express from 'express';
+
 export const app = express();
 app.use(express.json());
 app.get('/healthz', (req, res) => res.json({ ok: true }));
