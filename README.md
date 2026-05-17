@@ -6,9 +6,15 @@
 
 [https://biallo.github.io/express-practice-lab/](https://biallo.github.io/express-practice-lab/)
 
-## 运行
+## 开发
 
 ```shell
 npm install
 npm run dev
+```
+
+## 编译和构建
+
+```shell
+npm run build
 ```
